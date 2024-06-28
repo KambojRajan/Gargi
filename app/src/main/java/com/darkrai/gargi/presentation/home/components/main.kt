@@ -60,7 +60,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            CategoryDisplay(homeScreenStates = homeScreenStates,homeScreenAction = homeScreenAction)
+            CategoryDisplay(homeScreenStates = homeScreenStates, homeScreenAction = homeScreenAction,navHostController)
         }
     }
 

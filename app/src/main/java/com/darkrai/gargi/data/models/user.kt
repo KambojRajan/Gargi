@@ -21,7 +21,7 @@ fun UserDto.toUser(): User {
         userId = this.userId,
         password = this.password ?: "",
         isAdmin = this.isAdmin,
-        email = this.email
+        email = this.email,
     )
 }
 

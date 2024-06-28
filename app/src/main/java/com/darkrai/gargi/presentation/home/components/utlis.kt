@@ -54,6 +54,7 @@ import com.darkrai.gargi.data.models.User
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenActions
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenStates
 import com.darkrai.gargi.presentation.navigation.components.Routes
+import com.darkrai.gargi.presentation.plantDescription.stateActions.PlantDescriptionActions
 import com.darkrai.gargi.ui.theme.GargiTheme
 
 @Composable
@@ -171,7 +172,7 @@ fun CategoryCard(homeScreenStates: HomeScreenStates) {
 
 
 @Composable
-fun PlantCard(plant: Plant) {
+fun PlantCard(plant: Plant,navHostController: NavHostController) {
     ElevatedCard(
         modifier = Modifier
             .width(330.dp)
@@ -191,7 +192,10 @@ fun PlantCard(plant: Plant) {
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                     .fillMaxWidth()
                     .fillMaxHeight(0.7f)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+                    .clickable {
+                               navHostController.navigate("plants/${plant.id}")
+                    },
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(8.dp))

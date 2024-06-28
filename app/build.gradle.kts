@@ -88,6 +88,9 @@ dependencies {
 
     val navVersion = "2.7.5"
     implementation("androidx.navigation:navigation-compose:$navVersion")
-
+// uri images
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+//    payment
+    implementation("com.razorpay:checkout:1.6.38")
 }

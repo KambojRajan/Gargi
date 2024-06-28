@@ -15,9 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.darkrai.gargi.R
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenActions
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenStates
+import com.darkrai.gargi.presentation.plantDescription.stateActions.PlantDescriptionActions
 
 data class Category(
     val title:String,
@@ -25,7 +27,7 @@ data class Category(
 )
 
 @Composable
-fun CategoryDisplay(homeScreenStates: HomeScreenStates,homeScreenAction: (HomeScreenActions)->Unit) {
+fun CategoryDisplay(homeScreenStates: HomeScreenStates,homeScreenAction: (HomeScreenActions)->Unit,navHostController: NavHostController) {
     val categories = listOf(
         Category("Succulent", R.drawable.succulent),
         Category("Summer bone", R.drawable.summer),
@@ -65,7 +67,7 @@ fun CategoryDisplay(homeScreenStates: HomeScreenStates,homeScreenAction: (HomeSc
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(homeScreenStates.topPlants) { plant ->
-                        PlantCard(plant = plant)
+                        PlantCard(plant = plant, navHostController = navHostController)
                     }
                 }
             }

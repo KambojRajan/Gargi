@@ -1,6 +1,7 @@
 package com.darkrai.gargi.presentation.navigation.components
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -12,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navigation
 import com.darkrai.gargi.presentation.auth.signIn.components.Error
 import com.darkrai.gargi.presentation.auth.signIn.components.Loading
 import com.darkrai.gargi.presentation.auth.signIn.components.SignInScreen
@@ -20,8 +22,12 @@ import com.darkrai.gargi.presentation.auth.signUp.components.SignUpScreen
 import com.darkrai.gargi.presentation.auth.signUp.stateActions.SignUpViewModel
 import com.darkrai.gargi.presentation.dashboard.components.DashboardScreen
 import com.darkrai.gargi.presentation.dashboard.stateActions.DashboardViewModel
+import com.darkrai.gargi.presentation.donate.components.DonatePlantScreen
+import com.darkrai.gargi.presentation.donate.stateActions.DonateViewModel
 import com.darkrai.gargi.presentation.home.components.HomeScreen
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenViewModel
+import com.darkrai.gargi.presentation.plantDescription.components.PlantDescriptionScreen
+import com.darkrai.gargi.presentation.plantDescription.stateActions.PlantDescriptionViewModel
 import com.darkrai.gargi.presentation.search.stateActions.SearchViewModel
 import com.darkrai.gargi.presentation.welcome.components.WelcomeScreen
 
@@ -97,10 +103,21 @@ fun Navigation(navHostController: NavHostController) {
                 Error(error = signInStates.errorMessage ?: "Internal Server Error!")
             }
             composable(Routes.Donate.name) {
-                Text(text = "Donate")
+                val donateViewModel = hiltViewModel<DonateViewModel>()
+                val donateStates =  donateViewModel.states.collectAsState().value
+                if(signInStates.user?.userId == null || signInStates.user == null){
+                    navHostController.navigate(Routes.SignIn.name)
+                    return@composable
+                }
+                DonatePlantScreen(states = donateStates, onAction = donateViewModel::onAction, userId = signInStates.user.userId)
             }
             composable("plants/{plant_id}") {
-                Text(text = "plant description")
+                val id = it.arguments?.getString("plant_id")
+                if(id==null)return@composable
+                val plantDescriptionViewModel = hiltViewModel<PlantDescriptionViewModel>()
+                val plantDescriptionStates =  plantDescriptionViewModel.states.collectAsState().value
+                Log.i("patanathi",id)
+                PlantDescriptionScreen(plantId = id.toInt(), states = plantDescriptionStates, onEvent = plantDescriptionViewModel::onAction)
             }
         }
     }
