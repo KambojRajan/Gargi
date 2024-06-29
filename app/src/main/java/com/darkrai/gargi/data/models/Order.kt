@@ -8,7 +8,8 @@ data class OrderDto(
     @SerialName("delivery_date") val deliveryDate: String,
     @SerialName("id") val id: Int,
     @SerialName("users") val user: UUser,
-    @SerialName("plants") val plant: PPlant
+    @SerialName("plants") val plant: PPlant,
+    @SerialName("order_pending") val pending:Boolean
 )
 
 @Serializable

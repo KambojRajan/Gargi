@@ -27,9 +27,47 @@ class DashboardRepositoryImplement @Inject constructor(
                 val ans = withContext(Dispatchers.IO) {
                     postgrest
                         .from("orders")
-                        .select(Columns.raw("order_date,delivery_date,id, users(id, username, email, profile_img), plants(name, description, price, for_rescue, category, images)"))
+                        .select(
+                            Columns.raw(
+                                "order_date,delivery_date,id, users(id, username, email, profile_img)," +
+                                        " plants(name, description, price, for_rescue, category, images)"
+                            )
+                        ){
+                            filter {
+                                eq("pending",true)
+                            }
+                        }
                 }
                 Log.i(TAG, ans.data.toString())
+                ans.decodeList<OrderDto>()
+            }
+        }catch (e:Exception){
+            if(e is CancellationException) throw  e
+            Log.e(TAG, e.toString())
+            emptyList()
+        }
+    }
+
+    override suspend fun getPendingOrdersForAUser(userId:String): List<OrderDto> {
+        return try {
+            withContext(Dispatchers.IO){
+                val ans = withContext(Dispatchers.IO) {
+                    postgrest
+                        .from("orders")
+                        .select(
+                            Columns.raw(
+                                "order_date,delivery_date,id, users(id, username, email, profile_img)," +
+                                        " plants(name, description, price, for_rescue, category, images)"
+                            )
+                        ){
+                            filter {
+                                and {
+                                    eq("pending",true)
+                                    eq("user_id",userId)
+                                }
+                            }
+                        }
+                }
                 ans.decodeList<OrderDto>()
             }
         }catch (e:Exception){
@@ -82,6 +120,41 @@ class DashboardRepositoryImplement @Inject constructor(
                     textSearch(column,query,TextSearchType.WEBSEARCH)
                 }
             }.decodeList<UserDto>()
+        }catch (e:Exception){
+            if(e is CancellationException) throw  e
+            Log.e(TAG, e.toString())
+            emptyList()
+        }
+    }
+
+    override suspend fun searchUserProperties(userId: String): List<Int> {
+        return try {
+            withContext(Dispatchers.IO){
+                val orders = withContext(Dispatchers.IO) {
+                    postgrest
+                        .from("orders")
+                        .select(
+                            Columns.raw(
+                                "order_date,delivery_date,id, users(id, username, email, profile_img)," +
+                                        " plants(name, description, price, for_rescue, category, images)"
+                            )
+                        ){
+                            filter {
+                                eq("user_id",userId)
+                            }
+                        }
+                }.decodeList<OrderDto>()
+                val donations = withContext(Dispatchers.IO){
+                    postgrest
+                        .from("plants")
+                        .select {
+                        filter {
+                            eq("donated_by",userId)
+                        }
+                    }
+                }.decodeList<PlantDto>()
+                listOf(orders.size,donations.size)
+            }
         }catch (e:Exception){
             if(e is CancellationException) throw  e
             Log.e(TAG, e.toString())

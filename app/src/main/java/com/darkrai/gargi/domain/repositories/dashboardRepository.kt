@@ -8,7 +8,9 @@ import com.darkrai.gargi.data.models.UserDto
 
 interface DashboardRepository {
     suspend fun getPendingOrders():List<OrderDto>
+    suspend fun getPendingOrdersForAUser(user_id:String):List<OrderDto>
     suspend fun addNewPlant(plant:Plant):Boolean
     suspend fun searchAPlant(table:String,column:String,query:String):List<PlantDto>
     suspend fun searchAUser(table:String,column:String,query:String):List<UserDto>
+    suspend fun searchUserProperties(userId:String):List<Int>
 }

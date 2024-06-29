@@ -6,42 +6,36 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.darkrai.gargi.data.models.User
 
-
 @Composable
-fun BottomBar(navHostController: NavHostController,user:User) {
+fun BottomBar(navHostController: NavHostController, user: User) {
     var currentRoute by rememberSaveable {
         mutableStateOf(Routes.Home.name)
     }
-    NavigationBar {
+
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.primaryContainer
+    ) {
         NavigationBarItem(
             selected = currentRoute == Routes.Home.name,
             onClick = {
-                 currentRoute = Routes.Home.name
+                currentRoute = Routes.Home.name
                 navHostController.navigate(Routes.Home.name)
             },
             icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Home,
-                    contentDescription = "Home screen",
-                    modifier = Modifier.size(25.dp)
-                )
+                BounceIcon(icon = Icons.Outlined.Home, title = "Home screen", isSelected = currentRoute == Routes.Home.name)
             },
-            label = { Text(text = Routes.Home.name)}
+            label = {Text(text = Routes.Home.name) }
         )
         NavigationBarItem(
             selected = currentRoute == Routes.Profile.name,
@@ -50,15 +44,11 @@ fun BottomBar(navHostController: NavHostController,user:User) {
                 navHostController.navigate(Routes.Profile.name)
             },
             icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Person,
-                    contentDescription = "profile screen",
-                    modifier = Modifier.size(25.dp)
-                )
+                BounceIcon(icon = Icons.Outlined.Person, title = "Profile", currentRoute == Routes.Profile.name)
             },
-            label = { Text(text = Routes.Profile.name)}
+            label = {  Text(text = Routes.Profile.name) }
         )
-        if(user.isAdmin != null && user.isAdmin){
+        if (user.isAdmin != null && user.isAdmin) {
             NavigationBarItem(
                 selected = currentRoute == Routes.Dashboard.name,
                 onClick = {
@@ -66,13 +56,9 @@ fun BottomBar(navHostController: NavHostController,user:User) {
                     navHostController.navigate(Routes.Dashboard.name)
                 },
                 icon = {
-                    Icon(
-                        imageVector = DashboardIcon(),
-                        contentDescription = "profile screen",
-                        modifier = Modifier.size(25.dp)
-                    )
+                    BounceIcon(icon = DashboardIcon(), title = "Dashboard", isSelected = currentRoute == Routes.Dashboard.name)
                 },
-                label = { Text(text = Routes.Dashboard.name)}
+                label = { Text(text = Routes.Dashboard.name) }
             )
         }
         NavigationBarItem(
@@ -82,16 +68,22 @@ fun BottomBar(navHostController: NavHostController,user:User) {
                 navHostController.navigate(Routes.Donate.name)
             },
             icon = {
-                Icon(
-                    imageVector = DonatePlant(),
-                    contentDescription = "donate plant screen",
-                    modifier = Modifier.size(25.dp)
-                )
+                BounceIcon(icon = DonatePlant(), title = "Donate Plant", isSelected = currentRoute == Routes.Donate.name)
             },
-            label = { Text(text = Routes.Donate.name)}
+            label = { Text(text = Routes.Donate.name) }
         )
     }
+}
 
+@Composable
+fun BounceIcon(icon: ImageVector, title: String, isSelected: Boolean) {
+    Icon(
+        imageVector = icon,
+        contentDescription = title,
+        modifier = Modifier
+            .size(25.dp),
+        tint = if(isSelected)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.scrim
+    )
 }
 
 @Preview

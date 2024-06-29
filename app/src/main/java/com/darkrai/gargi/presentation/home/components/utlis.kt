@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +26,6 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,17 +34,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.darkrai.gargi.R
 import com.darkrai.gargi.data.models.Plant
@@ -54,8 +49,6 @@ import com.darkrai.gargi.data.models.User
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenActions
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenStates
 import com.darkrai.gargi.presentation.navigation.components.Routes
-import com.darkrai.gargi.presentation.plantDescription.stateActions.PlantDescriptionActions
-import com.darkrai.gargi.ui.theme.GargiTheme
 
 @Composable
 fun Topbar(user: User?,navHostController: NavHostController,homeScreenActions: (HomeScreenActions)->Unit) {
@@ -175,35 +168,36 @@ fun CategoryCard(homeScreenStates: HomeScreenStates) {
 fun PlantCard(plant: Plant,navHostController: NavHostController) {
     ElevatedCard(
         modifier = Modifier
-            .width(330.dp)
-            .padding(8.dp)
+            .fillMaxWidth(0.5f)
+            .height(170.dp)
+            .padding(4.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surface)
             .shadow(4.dp, RoundedCornerShape(16.dp))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
+                .padding(8.dp)
         ) {
             AsyncImage(
                 model = plant.images[0],
                 contentDescription = plant.name,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .clip(RoundedCornerShape(16.dp))
                     .fillMaxWidth()
-                    .fillMaxHeight(0.7f)
+                    .fillMaxHeight(0.75f)
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
                     .clickable {
-                               navHostController.navigate("plants/${plant.id}")
+                        navHostController.navigate("plants/${plant.id}")
                     },
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
+            Column {
                Row(
-                   horizontalArrangement = Arrangement.SpaceBetween
+                   horizontalArrangement = Arrangement.SpaceBetween,
+                   modifier = Modifier.fillMaxWidth(),
+                   verticalAlignment = Alignment.CenterVertically
                ) {
                    Text(
                        text = plant.name,
@@ -219,13 +213,6 @@ fun PlantCard(plant: Plant,navHostController: NavHostController) {
                        color = MaterialTheme.colorScheme.secondary
                    )
                }
-                Text(
-                    text = plant.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
             }
         }
     }
@@ -236,9 +223,8 @@ fun CategoryCard(title: String, imageId: Int,homeScreenAction: (HomeScreenAction
     Box(
         modifier = Modifier
             .width(160.dp)
-            .height(40.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .clickable {
                 homeScreenAction(HomeScreenActions.setSelectedCategory(Category(title, imageId)))
                 homeScreenAction(HomeScreenActions.searchSelectedCategory)
@@ -253,22 +239,28 @@ fun CategoryCard(title: String, imageId: Int,homeScreenAction: (HomeScreenAction
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp))
         )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, MaterialTheme.colorScheme.tertiary),
-                        startY = 50f
-                    )
-                )
-        )
         Text(
             text = title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(8.dp)
         )
+    }
+}
+
+
+@Composable
+fun Divider(title:String,type:TextStyle = MaterialTheme.typography.titleMedium) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = title,
+            style = type,
+            fontSize = 12.sp
+        )
+        Spacer(modifier = Modifier.height(4.dp))
     }
 }

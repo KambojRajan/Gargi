@@ -22,21 +22,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.darkrai.gargi.data.models.OrderDto
 
 @Composable
-fun OrderCard(order: OrderDto) {
+fun OrderCard(order: OrderDto,navHostController: NavHostController) {
     Row(
         modifier = Modifier
-            .width(500.dp)
             .fillMaxWidth()
-            .height(130.dp)
+            .height(200.dp)
             .background(
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(10.dp)
             )
-            .clickable { },
+            .clickable {
+                     navHostController.navigate("plants/${order.plant}")
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -51,7 +53,8 @@ fun OrderCard(order: OrderDto) {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(10.dp)
+                .padding(10.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

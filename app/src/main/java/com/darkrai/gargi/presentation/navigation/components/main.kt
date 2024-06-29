@@ -28,6 +28,8 @@ import com.darkrai.gargi.presentation.home.components.HomeScreen
 import com.darkrai.gargi.presentation.home.stateActions.HomeScreenViewModel
 import com.darkrai.gargi.presentation.plantDescription.components.PlantDescriptionScreen
 import com.darkrai.gargi.presentation.plantDescription.stateActions.PlantDescriptionViewModel
+import com.darkrai.gargi.presentation.profile.components.ProfileScreen
+import com.darkrai.gargi.presentation.profile.stateActions.ProfileViewModel
 import com.darkrai.gargi.presentation.search.stateActions.SearchViewModel
 import com.darkrai.gargi.presentation.welcome.components.WelcomeScreen
 
@@ -69,7 +71,14 @@ fun Navigation(navHostController: NavHostController) {
                 )
             }
             composable(Routes.Profile.name) {
-                Text(text = "Profile")
+                val profileViewModel = hiltViewModel<ProfileViewModel>()
+                val profileStates = profileViewModel.states.collectAsState().value
+               ProfileScreen(
+                   signInStates = signInStates,
+                   profileStats = profileStates,
+                   navHostController = navHostController,
+                   profileActions = profileViewModel::onAction
+               )
             }
             composable(Routes.Welcome.name) {
                 WelcomeScreen(
@@ -84,7 +93,8 @@ fun Navigation(navHostController: NavHostController) {
                DashboardScreen(
                    signInStates = signInStates,
                    dashboardStates = dashboardStates,
-                   dashboardActions = dashBoardViewModel::onAction
+                   dashboardActions = dashBoardViewModel::onAction,
+                   navHostController = navHostController
                )
             }
             composable(Routes.SignUp.name) {
